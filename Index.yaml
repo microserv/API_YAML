@@ -1,0 +1,83 @@
+# this is an example of the Uber API
+# as a demonstration of an API spec in YAML
+swagger: '2.0'
+info:
+  title: Index
+  description: Index Microservice
+  version: "1.0.0"
+# the domain of the service
+host: despina.128.no
+# array of all schemes that your API supports
+schemes:
+  - http
+# will be prefixed to all paths
+#basePath: /
+produces:
+  - application/json
+paths:
+  /index:
+   post:
+      summary: Provide indexed information abour articles
+      description: |
+        Specify a task (getSuggestions, getArticles, getFrequencyList) and 
+        potentially a word as the query
+        
+        Returns indexed information like article matches on keyword,
+        frequency information of words in articles, or lists of likeness/completion of
+        keywords.
+      parameters:
+        - name: task
+          in: formData
+          description: one of getSuggestions, getArticles, getFrequencyList
+          required: true
+          type: string
+        - name: word
+          in: formData
+          description: A single word as the query. Not used/included if task is getFrequencyList.  
+          required: true
+          type: string
+      responses:
+        200:
+          description: getSuggestions 
+          schema:
+            $ref: '#/definitions/getSuggestions'
+        201:
+          description: getArticles 
+          schema:
+            $ref: '#/definitions/getArticles'
+        202:
+          description: getFrequencyList
+          schema:
+            $ref: '#/definitions/getFrequencyList'
+        
+definitions:
+  getSuggestions:
+    type: object
+    properties:
+      suggestions:
+        type: array
+        description: List of possible completions for query word
+        items:
+          type: string
+          description: suggestion
+  getArticles:
+    type: object
+    properties:
+      articleID:
+        type: array
+        description: List of articles returned by index for given query
+        items:
+          type: string
+          description: article id
+  getFrequencyList:
+    type: object
+    properties:
+        word1:
+            type: integer
+            description: frequency of word in index
+        word2:
+            type: integer
+            description: frequency of word in index
+        wordN:
+            type: integer
+            description: frequency of word in index
